@@ -3,18 +3,41 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 
 export default function HomePage() {
-  const [backendStatus, setBackendStatus] = useState('checking');
+  const [backendStatus, setBackendStatus] = useState('checking'); // 'checking' | 'connected' | 'waking_up' | 'offline'
 
   useEffect(() => {
-    api.get('/health')
-      .then(res => {
-        if (res.data?.status === 'UP') {
-          setBackendStatus('connected');
-        } else {
-          setBackendStatus('error');
-        }
-      })
-      .catch(() => setBackendStatus('offline'));
+    let isMounted = true;
+    let retryTimeout = null;
+    let attempts = 0;
+
+    const checkHealth = () => {
+      api.get('/health', { timeout: 20000 })
+        .then((res) => {
+          if (!isMounted) return;
+          if (res.data?.status === 'UP') {
+            setBackendStatus('connected');
+          } else {
+            setBackendStatus('error');
+          }
+        })
+        .catch(() => {
+          if (!isMounted) return;
+          attempts++;
+          if (attempts <= 8) {
+            setBackendStatus('waking_up');
+            retryTimeout = setTimeout(checkHealth, 3500);
+          } else {
+            setBackendStatus('offline');
+          }
+        });
+    };
+
+    checkHealth();
+
+    return () => {
+      isMounted = false;
+      if (retryTimeout) clearTimeout(retryTimeout);
+    };
   }, []);
 
   return (
@@ -30,17 +53,17 @@ export default function HomePage() {
             <span className="badge badge-primary">Emergency Blood Donation Network</span>
             <span className="status-pill" style={{
               fontSize: '0.8rem',
-              color: backendStatus === 'connected' ? '#4ade80' : '#f87171',
+              color: backendStatus === 'connected' ? '#4ade80' : backendStatus === 'waking_up' ? '#facc15' : '#f87171',
               background: 'rgba(15, 23, 42, 0.8)',
               padding: '4px 10px',
               borderRadius: '999px',
               border: '1px solid rgba(255, 255, 255, 0.1)'
             }}>
               <span className="status-dot" style={{
-                backgroundColor: backendStatus === 'connected' ? '#22c55e' : '#ef4444',
-                boxShadow: backendStatus === 'connected' ? '0 0 8px #22c55e' : '0 0 8px #ef4444'
+                backgroundColor: backendStatus === 'connected' ? '#22c55e' : backendStatus === 'waking_up' ? '#eab308' : '#ef4444',
+                boxShadow: backendStatus === 'connected' ? '0 0 8px #22c55e' : backendStatus === 'waking_up' ? '0 0 8px #eab308' : '0 0 8px #ef4444'
               }}></span>
-              Backend API: {backendStatus.toUpperCase()}
+              Backend API: {backendStatus === 'waking_up' ? 'WAKING UP...' : backendStatus.toUpperCase()}
             </span>
           </div>
 

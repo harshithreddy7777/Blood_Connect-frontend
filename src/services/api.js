@@ -20,8 +20,16 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 60000, // 60 seconds to accommodate Render free-tier cold starts
 });
+
+// Periodic keep-alive ping every 4 minutes while the application tab is active
+if (typeof window !== 'undefined') {
+  setInterval(() => {
+    // Silent keepalive ping to prevent Render free tier from spinning down
+    axios.get(`${API_BASE_URL}/health`, { timeout: 15000 }).catch(() => {});
+  }, 4 * 60 * 1000);
+}
 
 // Request interceptor to attach JWT token if present
 api.interceptors.request.use(
