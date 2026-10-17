@@ -651,7 +651,7 @@ export default function AdminDashboardPage({ initialTab }) {
           <div style={{ fontSize: '2rem', fontWeight: 700, marginTop: '4px', color: '#fff' }}>
             {loadingSummary ? '...' : (dashboardSummary?.totalUsers ?? '0')}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>Registered accounts in MySQL</div>
+          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>Registered accounts</div>
         </div>
 
         <div className="glass-card" style={{ padding: '20px' }}>

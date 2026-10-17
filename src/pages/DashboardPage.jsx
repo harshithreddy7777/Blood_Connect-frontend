@@ -39,7 +39,7 @@ export default function DashboardPage() {
   if (loading || authLoading) {
     return (
       <div className="container" style={{ padding: '80px 24px' }}>
-        <LoadingSpinner message="Loading your personal dashboard from MySQL..." />
+        <LoadingSpinner message="Loading your personal dashboard..." />
       </div>
     );
   }

@@ -130,7 +130,7 @@ export default function MyRequestsPage() {
 
       {loading ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '60px 24px' }}>
-          <LoadingSpinner message="Loading your emergency blood requisitions from MySQL..." />
+          <LoadingSpinner message="Loading your emergency blood requisitions..." />
         </div>
       ) : requests.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '64px 24px' }}>

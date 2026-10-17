@@ -54,7 +54,7 @@ export default function DonorProfilePage() {
         } else {
           console.error('Failed to fetch donor profile:', err);
           setLoadError(
-            err.response?.data?.message || 'Unable to load your donor profile from MySQL. Please check connectivity.'
+            err.response?.data?.message || 'Unable to load your donor profile. Please check connectivity.'
           );
         }
       })

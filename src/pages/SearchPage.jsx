@@ -219,7 +219,7 @@ export default function SearchPage() {
       {/* Loading state */}
       {loading ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '60px 24px' }}>
-          <LoadingSpinner message="Searching registered voluntary donors in MySQL database..." />
+          <LoadingSpinner message="Searching registered voluntary donors..." />
         </div>
       ) : donors.length === 0 ? (
         /* Empty results state */
