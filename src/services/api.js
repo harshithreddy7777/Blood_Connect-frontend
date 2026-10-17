@@ -9,7 +9,11 @@ import axios from 'axios';
  * - SECURITY: Tokens and credentials are never logged to console or remote monitoring.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD
+    ? 'https://blood-connect-backend-g0v2.onrender.com/api/v1'
+    : 'http://localhost:8080/api/v1');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
